@@ -3,6 +3,7 @@
 The ALX ProDev Frontend Program is a program designed to help students master advanced front-end technologies, including React, Next.js, React Native, and TypeScript, to build responsive and dynamic user interfaces.
 
 ## Major Learnings
+
 During the program, we focused on the following:
 
 1. AI Prompting Framework, Requirement Analysis, and Understanding Our Learning Style.
@@ -28,6 +29,7 @@ During the program, we focused on the following:
 11. Styling in React Native, State Management, and React Native Expo Router.
 
 ## Challenges Faced
+
 Understanding GraphQL and Progressive Web App Development was challenging, but I was able to learn and improve through peer learning.
 
 ## Best Practices and Personal Takeaways
