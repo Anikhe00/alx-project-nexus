@@ -1,19 +1,19 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import PollPage from "./pages/PollPage";
-import CreatePoll from "./pages/CreatePoll";
-import Login from "./pages/Login";
+import AppRouter from "./router/AppRouter";
+import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider } from "@/context/AuthContext";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/poll/:id" element={<PollPage />} />
-        <Route path="/create" element={<CreatePoll />} />
-        <Route path="/login" element={<Login />} />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          className: "font-grotesk border border-neutral-200 rounded-none",
+          duration: 3000,
+        }}
+      />
+      <AppRouter />
+    </AuthProvider>
   );
 }
 
