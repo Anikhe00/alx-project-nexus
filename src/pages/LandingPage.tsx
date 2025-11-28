@@ -2,9 +2,22 @@ import Header from "@/components/Layout/Header";
 import { useNavigate } from "react-router-dom";
 import Footer from "@/components/Layout/Footer";
 import { Button } from "@/components/ui/button";
+import { useAuthContext } from "@/context/AuthContext";
+import { useEffect } from "react";
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const { user, loading } = useAuthContext();
+
+  useEffect(() => {
+    if (!loading && user) {
+      navigate("/dashboard");
+    }
+  }, [user, loading, navigate]);
+
+  if (loading) {
+    return <div>Loading...</div>; // Or your loading component
+  }
 
   return (
     <div className="font-grotesk w-full h-dvh lg:h-auto flex flex-col">

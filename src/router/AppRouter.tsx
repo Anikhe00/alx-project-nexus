@@ -7,6 +7,8 @@ import Login from "../pages/auth/Login";
 import Callback from "@/pages/auth/Callback";
 import Dashboard from "../pages/Dashboard";
 
+import Layout from "@/components/Layout/Layout";
+
 export default function AppRouter() {
   return (
     <BrowserRouter>
@@ -20,7 +22,9 @@ export default function AppRouter() {
           path="/dashboard"
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <Layout>
+                <Dashboard />
+              </Layout>
             </ProtectedRoute>
           }
         />

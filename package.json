@@ -17,6 +17,7 @@
     "@reduxjs/toolkit": "^2.10.1",
     "@supabase/supabase-js": "^2.84.0",
     "@tailwindcss/vite": "^4.1.17",
+    "@tanstack/react-table": "^8.21.3",
     "@untitledui/icons": "^0.0.19",
     "chart.js": "^4.5.1",
     "class-variance-authority": "^0.7.1",

@@ -33,6 +33,7 @@ const Register = () => {
   const form = useForm<z.infer<typeof AuthSchema>>({
     resolver: zodResolver(AuthSchema),
     defaultValues: {
+      fullName: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -42,13 +43,16 @@ const Register = () => {
   const onSubmit = async (values: z.infer<typeof AuthSchema>) => {
     setLoading(true);
 
-    const { email, password } = values;
+    const { fullName, email, password } = values;
 
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         emailRedirectTo: `${window.location.origin}/auth/callback`,
+        data: {
+          full_name: fullName,
+        },
       },
     });
 
@@ -57,6 +61,18 @@ const Register = () => {
     if (error) {
       toast.error(error.message);
       return;
+    }
+
+    // Update the profiles table with full_name
+    if (data.user) {
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .update({ full_name: fullName })
+        .eq("id", data.user.id);
+
+      if (profileError) {
+        console.error("Profile update error:", profileError);
+      }
     }
 
     toast.success("Account created! Check your email to confirm.");
@@ -84,6 +100,28 @@ const Register = () => {
             </div>
 
             <div className="w-full flex flex-col gap-5">
+              {/* Full Name */}
+              <FormField
+                control={form.control}
+                name="fullName"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel className="font-grotesk text-neutral-800">
+                      Full Name
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        className="h-10 focus-visible:border-teal-200 focus-visible:ring-teal-100/50 caret-teal-800 font-grotesk text-sm text-neutral-700 placeholder:text-neutral-300"
+                        type="fullName"
+                        placeholder="e.g. Lando Norris"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               {/* Email */}
               <FormField
                 control={form.control}
