@@ -8,6 +8,7 @@ import Callback from "@/pages/auth/Callback";
 import Dashboard from "../pages/Dashboard";
 import Polls from "@/pages/Polls";
 import PublicPollVote from "@/pages/PublicPollVote";
+import Settings from "@/pages/Settings";
 
 import Layout from "@/components/Layout/Layout";
 
@@ -42,6 +43,18 @@ export default function AppRouter() {
           }
         />
 
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Settings />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Public Vote View */}
         <Route path="/poll/:pollId" element={<PublicPollVote />} />
       </Routes>
     </BrowserRouter>
