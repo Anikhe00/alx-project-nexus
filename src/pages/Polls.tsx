@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -38,7 +38,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { CgPoll } from "react-icons/cg";
-
 import {
   Search,
   MoreVertical,
@@ -51,40 +50,14 @@ import {
   Mail,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-
 import PollDetail from "@/components/ui/PollDetails";
 import CreatePollModal from "@/components/ui/CreatePollForm";
-
-import { supabase } from "@/api/supabaseClient";
-import { useAuthContext } from "@/context/AuthContext";
+import { usePollsContext, type Poll } from "@/context/PollsContext";
 import { toast } from "sonner";
 import { FaFacebook, FaLinkedin, FaXTwitter } from "react-icons/fa6";
-
 import { useLocation } from "react-router-dom";
 
-export type Poll = {
-  id: string;
-  title: string;
-  description: string | null;
-  start_at: string;
-  end_at: string;
-  created_at: string;
-  votes: number;
-  options: number;
-};
-
 type FilterTab = "all" | "active" | "upcoming" | "past";
-
-// Helper functions
-const getPollStatus = (poll: Poll): FilterTab => {
-  const now = new Date();
-  const startDate = new Date(poll.start_at);
-  const endDate = new Date(poll.end_at);
-
-  if (now < startDate) return "upcoming";
-  if (now > endDate) return "past";
-  return "active";
-};
 
 const getStatusBadge = (status: string) => {
   const variants = {
@@ -107,7 +80,16 @@ const getStatusBadge = (status: string) => {
 const getTimeInfo = (poll: Poll) => {
   const now = new Date();
   const startDate = new Date(poll.start_at);
-  const endDate = new Date(poll.end_at);
+  const endDate = poll.end_at ? new Date(poll.end_at) : null;
+
+  if (!endDate) return "No end date";
+
+  const getPollStatus = (poll: Poll) => {
+    if (now < startDate) return "upcoming";
+    if (now > endDate) return "past";
+    return "active";
+  };
+
   const status = getPollStatus(poll);
 
   if (status === "upcoming") {
@@ -139,15 +121,15 @@ const formatDate = (dateString: string) => {
 };
 
 const Polls = () => {
-  const { user } = useAuthContext();
+  const { polls, isLoading, deletePoll, getPollStatus } = usePollsContext();
+  const location = useLocation();
+
   const [activeTab, setActiveTab] = useState<FilterTab>("all");
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedPollId, setSelectedPollId] = useState<string | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [polls, setPolls] = useState<Poll[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   // Dialog states
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -156,8 +138,6 @@ const Polls = () => {
   const [pollToShare, setPollToShare] = useState<Poll | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const location = useLocation();
-
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     if (params.get("openForm") === "true") {
@@ -165,83 +145,17 @@ const Polls = () => {
     }
   }, [location.search]);
 
-  // Fetch polls from supabase
-  const fetchPolls = useCallback(async () => {
-    if (!user) return;
-
-    setIsLoading(true);
-    try {
-      const { data: pollsData, error: pollsError } = await supabase
-        .from("polls")
-        .select("*")
-        .eq("created_by", user.id)
-        .order("created_at", { ascending: false });
-
-      if (pollsError) throw pollsError;
-
-      // For each poll, get vote count and option count
-      const pollsWithCounts = await Promise.all(
-        pollsData.map(async (poll) => {
-          // Get vote count
-          const { count: voteCount } = await supabase
-            .from("poll_votes")
-            .select("*", { count: "exact", head: true })
-            .eq("poll_id", poll.id);
-
-          // Get option count
-          const { count: optionCount } = await supabase
-            .from("poll_options")
-            .select("*", { count: "exact", head: true })
-            .eq("poll_id", poll.id);
-
-          return {
-            id: poll.id,
-            title: poll.title,
-            description: poll.description,
-            start_at: poll.start_at,
-            end_at: poll.end_at,
-            created_at: poll.created_at,
-            votes: voteCount || 0,
-            options: optionCount || 0,
-          };
-        })
-      );
-
-      setPolls(pollsWithCounts);
-    } catch (error) {
-      console.error("Error fetching polls:", error);
-      toast.error("Failed to load polls");
-    } finally {
-      setIsLoading(false);
-    }
-  }, [user]);
-
-  useEffect(() => {
-    fetchPolls();
-  }, [fetchPolls]);
-
   // Handle delete poll
   const handleDeletePoll = async () => {
     if (!pollToDelete) return;
 
     setIsDeleting(true);
-    try {
-      const { error } = await supabase
-        .from("polls")
-        .delete()
-        .eq("id", pollToDelete.id);
+    const success = await deletePoll(pollToDelete.id);
+    setIsDeleting(false);
 
-      if (error) throw error;
-
-      toast.success("Poll deleted successfully");
-      fetchPolls();
+    if (success) {
       setDeleteDialogOpen(false);
       setPollToDelete(null);
-    } catch (error) {
-      console.error("Error deleting poll:", error);
-      toast.error("Failed to delete poll");
-    } finally {
-      setIsDeleting(false);
     }
   };
 
@@ -286,7 +200,7 @@ const Polls = () => {
     toast.success("Link copied to clipboard!");
   };
 
-  // Memoize filtered data to prevent recalculation on every render
+  // Memoize filtered data
   const filteredData = useMemo(() => {
     return polls.filter((poll) => {
       const matchesTab =
@@ -296,9 +210,9 @@ const Polls = () => {
         .includes(searchQuery.toLowerCase());
       return matchesTab && matchesSearch;
     });
-  }, [activeTab, searchQuery, polls]);
+  }, [activeTab, searchQuery, polls, getPollStatus]);
 
-  // Memoize columns to prevent recreation on every render
+  // Memoize columns
   const columns = useMemo<ColumnDef<Poll>[]>(
     () => [
       {
@@ -328,7 +242,8 @@ const Polls = () => {
                 </p>
               )}
               <p className="text-xs text-neutral-400">
-                {formatDate(poll.start_at)} - {formatDate(poll.end_at)}
+                {formatDate(poll.start_at)} -{" "}
+                {poll.end_at ? formatDate(poll.end_at) : "No end"}
               </p>
             </div>
           );
@@ -425,7 +340,7 @@ const Polls = () => {
         },
       },
     ],
-    []
+    [getPollStatus]
   );
 
   const table = useReactTable({
@@ -450,8 +365,16 @@ const Polls = () => {
       upcoming: polls.filter((p) => getPollStatus(p) === "upcoming").length,
       past: polls.filter((p) => getPollStatus(p) === "past").length,
     }),
-    [polls]
+    [polls, getPollStatus]
   );
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <p className="text-neutral-500">Loading polls...</p>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -649,7 +572,8 @@ const Polls = () => {
                 <div className="mt-3 pt-3 border-t text-xs text-neutral-400 flex items-center justify-between">
                   <span>{getTimeInfo(poll)}</span>
                   <span>
-                    {formatDate(poll.start_at)} - {formatDate(poll.end_at)}
+                    {formatDate(poll.start_at)} -{" "}
+                    {poll.end_at ? formatDate(poll.end_at) : "No end"}
                   </span>
                 </div>
               </div>
@@ -782,7 +706,6 @@ const Polls = () => {
       <CreatePollModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
-        onSuccess={fetchPolls}
       />
 
       {/* Poll Detail Modal */}

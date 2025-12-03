@@ -26,14 +26,14 @@ import {
   Smartphone,
   Monitor,
   Tablet,
-  Facebook,
-  Twitter,
-  Linkedin,
   Mail,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/api/supabaseClient";
 import { submitVote, hasVoted, getPollResults } from "@/lib/analytics";
+import { usePollsContext } from "@/context/PollsContext";
+import { FaFacebook, FaLinkedin, FaXTwitter } from "react-icons/fa6";
+
 import { toast } from "sonner";
 
 type Poll = {
@@ -805,7 +805,7 @@ export default function PollDetailModal({
               className="flex items-center gap-2 justify-start"
               onClick={() => handleShare("twitter")}
             >
-              <Twitter className="w-4 h-4 text-sky-500" />
+              <FaXTwitter className="w-4 h-4 text-sky-500" />
               Twitter
             </Button>
             <Button
@@ -813,7 +813,7 @@ export default function PollDetailModal({
               className="flex items-center gap-2 justify-start"
               onClick={() => handleShare("facebook")}
             >
-              <Facebook className="w-4 h-4 text-blue-600" />
+              <FaFacebook className="w-4 h-4 text-blue-600" />
               Facebook
             </Button>
             <Button
@@ -821,7 +821,7 @@ export default function PollDetailModal({
               className="flex items-center gap-2 justify-start"
               onClick={() => handleShare("linkedin")}
             >
-              <Linkedin className="w-4 h-4 text-blue-700" />
+              <FaLinkedin className="w-4 h-4 text-blue-700" />
               LinkedIn
             </Button>
             <Button
