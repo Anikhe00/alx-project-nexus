@@ -224,7 +224,7 @@ const Polls = () => {
               onClick={() =>
                 column.toggleSorting(column.getIsSorted() === "asc")
               }
-              className="hover:bg-transparent p-0 font-medium text-neutral-700"
+              className="hover:bg-transparent has-[>svg]:px-0 p-0 font-medium text-neutral-500"
             >
               Poll Details
               <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -272,7 +272,7 @@ const Polls = () => {
               onClick={() =>
                 column.toggleSorting(column.getIsSorted() === "asc")
               }
-              className="hover:bg-transparent p-0 font-medium text-neutral-700"
+              className="hover:bg-transparent has-[>svg]:px-0 p-0 font-medium text-neutral-500"
             >
               Votes
               <ArrowUpDown className="ml-2 h-4 w-4" />

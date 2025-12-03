@@ -39,7 +39,7 @@ interface PollsContextType {
   deletePoll: (pollId: string) => Promise<boolean>;
   getPollStatus: (poll: Poll) => PollStatus;
 
-  // Helpers
+  // Helper function
   refreshPolls: () => void;
 }
 
@@ -212,7 +212,7 @@ export const PollsProvider: React.FC<{ children: React.ReactNode }> = ({
     [fetchPolls, fetchDashboardStats]
   );
 
-  // Refresh polls (useful after creating/updating)
+  // Refresh polls
   const refreshPolls = useCallback(() => {
     fetchPolls();
     fetchDashboardStats();

@@ -245,8 +245,8 @@ export default function Dashboard() {
         </div>
 
         {/* Recent Polls Table */}
-        <div className="border rounded-lg overflow-hidden">
-          <div className="bg-neutral-50 px-6 py-4 border-b flex items-center justify-between">
+        <div className="border border-neutral-200 rounded-lg overflow-hidden">
+          <div className="bg-white px-4 md:px-5 lg:px-5 py-3 border-b flex items-center justify-between">
             <h2 className="text-lg font-semibold font-grotesk text-neutral-800">
               Recent Polls
             </h2>
@@ -254,7 +254,7 @@ export default function Dashboard() {
               variant="ghost"
               size="sm"
               onClick={() => navigate("/polls")}
-              className="text-teal-600 hover:text-teal-700 hover:bg-teal-50"
+              className="text-teal-600 cursor-pointer hover:text-teal-700 hover:bg-teal-50"
             >
               View All
               <ArrowRight className="w-4 h-4 ml-1" />
@@ -281,10 +281,10 @@ export default function Dashboard() {
           ) : (
             <Table>
               <TableHeader>
-                <TableRow className="bg-neutral-50 hover:bg-neutral-50">
-                  <TableHead className="font-grotesk">Poll Details</TableHead>
-                  <TableHead className="font-grotesk">Status</TableHead>
-                  <TableHead className="font-grotesk">Votes</TableHead>
+                <TableRow className="bg-neutral-50 hover:bg-neutral-50 ">
+                  <TableHead>Poll Details</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Votes</TableHead>
                   <TableHead className="text-right font-grotesk">
                     Actions
                   </TableHead>

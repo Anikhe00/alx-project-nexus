@@ -157,7 +157,7 @@ export default function CreatePollModal({
 
       toast.success("Poll created successfully!");
       handleClose();
-      refreshPolls(); // Use context's refresh function
+      refreshPolls();
     } catch (error: any) {
       console.error("Error creating poll:", error);
       toast.error(error.message || "Failed to create poll");
