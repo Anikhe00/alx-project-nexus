@@ -1,4 +1,5 @@
-import Header from "./Header";
+import { SidebarProvider } from "../ui/sidebar";
+import AppSidebar from "./AppSidebar";
 import type { ReactNode } from "react";
 
 type LayoutProps = {
@@ -7,12 +8,14 @@ type LayoutProps = {
 
 const Layout = ({ children }: LayoutProps) => {
   return (
-    <div>
-      <Header />
-      <main className="w-full flex-1 flex flex-col p-6 md:p-10 lg:px-40 lg:py-6">
+    <SidebarProvider>
+      <AppSidebar />
+      <main className="w-full px-6 md:px-10 lg:px-40 py-6 lg:py-10">
+        {/* <SidebarTrigger /> */}
+
         {children}
       </main>
-    </div>
+    </SidebarProvider>
   );
 };
 
