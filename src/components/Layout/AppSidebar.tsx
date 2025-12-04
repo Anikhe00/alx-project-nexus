@@ -238,11 +238,6 @@ function MobileHeader() {
           className="flex h-full flex-1 p-0 font-grotesk"
         >
           <div className="flex flex-1 flex-col">
-            {/* Handle Bar */}
-            <div className="flex justify-center pt-3 pb-2">
-              <div className="w-12 h-1 bg-neutral-300"></div>
-            </div>
-
             {/* Header */}
             <div className="px-6 py-3 border-b border-neutral-200">
               <Logo />
@@ -297,7 +292,7 @@ function MobileHeader() {
               {/* Logout Button */}
               <Button
                 variant="ghost"
-                className="w-full justify-center text-red-600 hover:text-red-700 hover:bg-red-50 h-11"
+                className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50 h-11"
                 onClick={handleLogout}
               >
                 <LogOut className="h-4 w-4 mr-2" />

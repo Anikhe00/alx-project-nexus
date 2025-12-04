@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import StatCard from "./statCard";
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Dialog,
@@ -20,7 +22,6 @@ import {
   Clock,
   Users,
   CheckCircle2,
-  BarChart3,
   Mail,
   Facebook,
   Twitter,
@@ -29,6 +30,7 @@ import {
 import { cn } from "@/lib/utils";
 import { submitVote, hasVoted, getPollResults } from "@/lib/analytics";
 import { usePollsContext } from "@/context/PollsContext";
+import PollAnalytics from "@/components/ui/PollAnalytics";
 import type { Poll as ContextPoll } from "@/context/PollsContext";
 import { toast } from "sonner";
 
@@ -56,8 +58,14 @@ export default function PollDetailModal({
   isOpen,
   onClose,
 }: PollDetailModalProps) {
-  // Context
-  const { polls, deletePoll, getPollStatus, refreshPolls } = usePollsContext();
+  const { polls, deletePoll, getPollStatus, refreshPolls, incrementView } =
+    usePollsContext();
+
+  useEffect(() => {
+    if (isOpen && pollId) {
+      incrementView(pollId);
+    }
+  }, [isOpen, pollId, incrementView]);
 
   // Local State
   const [poll, setPoll] = useState<PollView | null>(null);
@@ -79,19 +87,17 @@ export default function PollDetailModal({
   useEffect(() => {
     if (!isOpen || !pollId) return;
 
-    // A. Optimistic Load from Context
     const existingPoll = polls.find((p) => p.id === pollId);
 
     if (existingPoll) {
       setPoll({
         ...existingPoll,
         total_votes: existingPoll.votes,
-        // FIX: Cast the status to exclude "all"
         status: getPollStatus(existingPoll) as "active" | "upcoming" | "past",
       });
     }
 
-    // B. Fetch Detailed Results (Options & Vote Status)
+    // Fetch Detailed Results (Options & Vote Status)
     const fetchDetailedResults = async () => {
       setIsLoadingResults(true);
       try {
@@ -280,39 +286,32 @@ export default function PollDetailModal({
             <div className="p-6 space-y-6">
               {/* Stats */}
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-neutral-50 rounded-lg p-4">
-                  <div className="flex items-center gap-2 text-neutral-600 mb-1">
-                    <Users className="w-4 h-4" />
-                    <span className="text-sm">Total Votes</span>
-                  </div>
-                  <p className="text-2xl font-semibold text-neutral-800">
-                    {poll?.total_votes?.toLocaleString() || "0"}
-                  </p>
-                </div>
-                <div className="bg-neutral-50 rounded-lg p-4">
-                  <div className="flex items-center gap-2 text-neutral-600 mb-1">
-                    <Clock className="w-4 h-4" />
-                    <span className="text-sm">Time Remaining</span>
-                  </div>
-                  <p className="text-2xl font-semibold text-neutral-800">
-                    {poll?.end_at ? "Active" : "Open Ended"}
-                  </p>
-                </div>
+                <StatCard
+                  icon={Users}
+                  title="Total Votes"
+                  data={poll?.total_votes?.toLocaleString() || "0"}
+                />
+
+                <StatCard
+                  icon={Clock}
+                  title="Time Remaining"
+                  data={poll?.end_at ? "Active" : "Open Ended"}
+                />
               </div>
 
               {/* Poll Duration */}
-              <div className="bg-neutral-50 rounded-lg p-4">
+              <div className="bg-white border font-grotesk border-neutral-200 rounded-lg p-4">
                 <h3 className="text-sm font-medium text-neutral-700 mb-2">
                   Poll Duration
                 </h3>
                 <p className="text-sm text-neutral-600">
                   {poll?.start_at ? formatDate(poll.start_at) : "No start date"}{" "}
-                  -{poll?.end_at ? formatDate(poll.end_at) : "No end date"}
+                  - {poll?.end_at ? formatDate(poll.end_at) : "No end date"}
                 </p>
               </div>
 
               {/* Poll Results List */}
-              <div>
+              <div className="font-grotesk">
                 <h3 className="text-lg font-semibold text-neutral-800 mb-4">
                   Results
                 </h3>
@@ -326,7 +325,7 @@ export default function PollDetailModal({
                       <div
                         key={option.id}
                         className={cn(
-                          "border rounded-lg p-4 transition-all cursor-pointer hover:border-teal-300",
+                          "border rounded-lg p-4 transition-all cursor-pointer hover:border-teal-300 hover:bg-teal-50",
                           selectedOption === option.id
                             ? "border-teal-500 bg-teal-50"
                             : "border-neutral-200"
@@ -369,7 +368,7 @@ export default function PollDetailModal({
                             </p>
                           </div>
                         </div>
-                        <Progress value={option.percentage} className="h-2" />
+                        <Progress value={option.percentage} className="h-2 " />
                       </div>
                     ))}
                   </div>
@@ -399,30 +398,23 @@ export default function PollDetailModal({
             </div>
           </TabsContent>
 
-          {/* Analytics Tab - Coming Soon */}
+          {/* Analytics Tab */}
           <TabsContent
             value="analytics"
             className="flex-1 overflow-y-auto mt-0"
           >
-            <div className="flex flex-col items-center justify-center h-full min-h-[300px] p-6 text-center space-y-4">
-              <div className="p-4 bg-neutral-100 rounded-full">
-                <BarChart3 className="w-8 h-8 text-neutral-400" />
-              </div>
-              <div className="space-y-1">
-                <h3 className="text-lg font-semibold text-neutral-900">
-                  Analytics Coming Soon
-                </h3>
-                <p className="text-sm text-neutral-500 max-w-[250px] mx-auto">
-                  We are working hard to bring you detailed insights about your
-                  polls.
-                </p>
-              </div>
+            <div className="p-6 space-y-6">
+              <PollAnalytics
+                pollId={pollId!}
+                totalVotes={poll?.total_votes || 0}
+                viewCount={(poll as any)?.view_count || 0}
+              />
             </div>
           </TabsContent>
         </Tabs>
 
         {/* Footer */}
-        <div className="border-t border-neutral-200 p-4">
+        <div className="border-t font-grotesk border-neutral-200 p-4">
           <div className="flex items-center gap-2">
             <Button
               variant="outline"

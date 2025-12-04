@@ -43,6 +43,7 @@ interface PollsContextType {
   refreshPolls: () => void;
   getTimeInfo: (poll: Poll) => string;
   formatDate: (dateString: string) => string;
+  incrementView: (pollId: string) => Promise<void>;
 }
 
 const PollsContext = createContext<PollsContextType | undefined>(undefined);
@@ -120,6 +121,17 @@ export const PollsProvider: React.FC<{ children: React.ReactNode }> = ({
     },
     [getPollStatus]
   );
+
+  const incrementView = useCallback(async (pollId: string) => {
+    try {
+      const { error } = await supabase.rpc("increment_poll_view", {
+        poll_id_input: pollId,
+      });
+      if (error) console.error("Error incrementing view:", error);
+    } catch (err) {
+      console.error("Failed to track view", err);
+    }
+  }, []);
 
   // --- API Functions ---
 
@@ -283,6 +295,7 @@ export const PollsProvider: React.FC<{ children: React.ReactNode }> = ({
     refreshPolls,
     getTimeInfo,
     formatDate,
+    incrementView,
   };
 
   return (

@@ -1,10 +1,12 @@
 import type { LucideIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type SummaryCardProps = {
+  className?: string;
   title: string;
   icon: LucideIcon;
   iconColor?: string;
-  data: number;
+  data: number | string;
 };
 
 const StatCard = ({
@@ -12,9 +14,15 @@ const StatCard = ({
   icon: Icon,
   iconColor = "text-teal-600",
   data,
+  className,
 }: SummaryCardProps) => {
   return (
-    <div className="bg-white font-grotesk overflow-hidden border border-neutral-200 rounded-lg group">
+    <div
+      className={cn(
+        "bg-white font-grotesk overflow-hidden border border-neutral-200 rounded-lg group",
+        className
+      )}
+    >
       <div className="p-5">
         <div className="w-full flex-1">
           <dl className="flex flex-col gap-2">

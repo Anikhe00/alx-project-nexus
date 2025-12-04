@@ -33,17 +33,34 @@ const getDeviceId = (): string => {
   return deviceId;
 };
 
+const getDeviceType = () => {
+  const ua = navigator.userAgent;
+  if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
+    return "Tablet";
+  }
+  if (
+    /Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated/.test(
+      ua
+    )
+  ) {
+    return "Mobile";
+  }
+  return "Desktop";
+};
+
 // Submit a vote for a poll
 export const submitVote = async (pollId: string, optionId: string) => {
   try {
     const deviceId = getDeviceId();
+
+    const deviceType = getDeviceType();
 
     // Get current user (if logged in)
     const {
       data: { user },
     } = await supabase.auth.getUser();
 
-    // Check if device has already voted (unique constraint will also catch this)
+    // Check if device has already voted
     const { data: existingVote } = await supabase
       .from("poll_votes")
       .select("id")
@@ -61,10 +78,10 @@ export const submitVote = async (pollId: string, optionId: string) => {
       option_id: optionId,
       device_id: deviceId,
       user_id: user?.id || null,
+      device_type: deviceType,
     });
 
     if (error) {
-      // Check if it's the unique constraint error
       if (error.code === "23505") {
         return { success: false, error: "You have already voted on this poll" };
       }
