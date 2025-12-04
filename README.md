@@ -2,9 +2,9 @@
 
 ## 📋 Overview
 
-PollUp is a modern, real-time online polling platform that enables users to create, share, and vote on polls with instant result updates. Built as part of the ProDev FE case study, this application demonstrates advanced front-end development skills including real-time data synchronization, state management with Context API, and dynamic data visualization.
+PollUp is a modern, real-time online polling platform that enables users to create, share, and vote on polls with instant result updates. Built as part of the ProDev FE case study, this application demonstrates advanced front-end development skills, including real-time data synchronisation, state management with Context API, and dynamic data visualisation.
 
-**Live Demo:** [https://pollup.vercel.app](https://pollup.vercel.app)
+**Live Demo:** [https://pollsup.vercel.app](https://pollsup.vercel.app/)
 
 ## ✨ Key Features
 
@@ -14,7 +14,7 @@ PollUp is a modern, real-time online polling platform that enables users to crea
 - **Poll Creation**: Multi-step form with validation (title, options, scheduling)
 - **Real-Time Voting**: Live vote counting with device-based duplicate prevention
 - **Dynamic Results**: Interactive charts and progress bars showing live poll results
-- **Poll Management**: View, edit, share, and delete polls from a centralized dashboard
+- **Poll Management**: View, edit, share, and delete polls from a centralised dashboard
 
 ### 📊 Analytics & Insights
 
@@ -28,7 +28,7 @@ PollUp is a modern, real-time online polling platform that enables users to crea
 - **Responsive Design**: Seamless experience across all devices
 - **Dark Mode Ready**: Theme support for better accessibility
 - **Intuitive UI**: Clean, modern interface with smooth animations
-- **Status Management**: Active, upcoming, and past poll categorization
+- **Status Management**: Active, upcoming, and past poll categorisation
 
 ### 🔗 Social Features
 
@@ -60,7 +60,7 @@ PollUp is a modern, real-time online polling platform that enables users to crea
   - Row Level Security (RLS)
   - Authentication
 
-### Data Visualization
+### Data Visualisation
 
 - **Recharts** - Chart library for analytics
 - **TanStack Table** - Powerful table management
