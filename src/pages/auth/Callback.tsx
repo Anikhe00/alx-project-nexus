@@ -8,7 +8,7 @@ const Callback = () => {
 
   useEffect(() => {
     const verify = async () => {
-      const { data, error } = await supabase.auth.getSession();
+      const { error } = await supabase.auth.getSession();
 
       if (error) {
         toast.error("Email verification failed.");

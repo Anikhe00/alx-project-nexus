@@ -194,7 +194,7 @@ export default function CreatePollModal({
     <>
       <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 transition-opacity" />
       <div
-        className="fixed right-0 top-0 h-full w-full max-w-2xl bg-white shadow-2xl z-50 overflow-hidden flex flex-col animate-in slide-in-from-right duration-300"
+        className="fixed right-0 top-0 h-full w-full max-w-2xl bg-white shadow-2xl z-50 overflow-hidden flex flex-col animate-in slide-in-from-right duration-300 font-grotesk"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between p-6 border-b border-neutral-200">
