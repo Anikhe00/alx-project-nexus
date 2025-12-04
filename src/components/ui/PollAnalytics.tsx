@@ -2,8 +2,6 @@ import { useEffect, useState, useMemo } from "react";
 import { supabase } from "@/api/supabaseClient";
 import StatCard from "./statCard";
 import {
-  Area,
-  AreaChart,
   BarChart,
   CartesianGrid,
   XAxis,
