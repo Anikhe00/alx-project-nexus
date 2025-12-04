@@ -279,107 +279,200 @@ export default function Dashboard() {
               </Button>
             </div>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-neutral-50 hover:bg-neutral-50 ">
-                  <TableHead>Poll Details</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Votes</TableHead>
-                  <TableHead className="text-right font-grotesk">
-                    Actions
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {recentPolls.map((poll) => {
-                  const status = getPollStatus(poll);
-                  return (
-                    <TableRow key={poll.id} className="font-grotesk">
-                      <TableCell>
-                        <div className="flex flex-col gap-1 py-1">
-                          <p className="font-medium text-neutral-800">
-                            {poll.title}
-                          </p>
-                          {poll.description && (
-                            <p className="text-sm text-neutral-500 line-clamp-1">
-                              {poll.description}
+            <>
+              <Table className="hidden lg:block">
+                <TableHeader>
+                  <TableRow className="bg-neutral-50 hover:bg-neutral-50 ">
+                    <TableHead>Poll Details</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Votes</TableHead>
+                    <TableHead className="text-right font-grotesk">
+                      Actions
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {recentPolls.map((poll) => {
+                    const status = getPollStatus(poll);
+                    return (
+                      <TableRow key={poll.id} className="font-grotesk">
+                        <TableCell>
+                          <div className="flex flex-col gap-1 py-1">
+                            <p className="font-medium text-neutral-800">
+                              {poll.title}
                             </p>
-                          )}
-                          <p className="text-xs text-neutral-400">
-                            {formatDate(poll.start_at)} -{" "}
-                            {poll.end_at ? formatDate(poll.end_at) : "No end"}
+                            {poll.description && (
+                              <p className="text-sm text-neutral-500 line-clamp-1">
+                                {poll.description}
+                              </p>
+                            )}
+                            <p className="text-xs text-neutral-400">
+                              {formatDate(poll.start_at)} -{" "}
+                              {poll.end_at ? formatDate(poll.end_at) : "No end"}
+                            </p>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex flex-col gap-1">
+                            {getStatusBadge(status)}
+                            <p className="text-xs text-neutral-500">
+                              {getTimeInfo(poll)}
+                            </p>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex flex-col gap-0.5">
+                            <p className="font-medium text-neutral-800">
+                              {poll.votes.toLocaleString()}
+                            </p>
+                            <p className="text-xs text-neutral-500">
+                              {poll.options} options
+                            </p>
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8"
+                              >
+                                <MoreVertical className="w-4 h-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem
+                                onClick={() => setSelectedPollId(poll.id)}
+                              >
+                                <Eye className="w-4 h-4 mr-2" />
+                                View Results
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => handleCopyLink(poll.id)}
+                              >
+                                <Copy className="w-4 h-4 mr-2" />
+                                Copy Link
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  setPollToShare(poll);
+                                  setShareDialogOpen(true);
+                                }}
+                              >
+                                <Share2 className="w-4 h-4 mr-2" />
+                                Share
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                className="text-red-600"
+                                onClick={() => {
+                                  setPollToDelete(poll);
+                                  setDeleteDialogOpen(true);
+                                }}
+                              >
+                                <Trash2 className="w-4 h-4 mr-2" />
+                                Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+              <div className="lg:hidden grid gap-2">
+                {recentPolls.map((poll) => (
+                  <div
+                    key={poll.id}
+                    className=" border-b p-4 font-grotesk hover:shadow-sm transition-shadow"
+                  >
+                    <div className="flex items-start justify-between gap-3 mb-3">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-medium text-neutral-800 mb-1">
+                          {poll.title}
+                        </h3>
+                        {poll.description && (
+                          <p className="text-sm text-neutral-500 line-clamp-2 mb-2">
+                            {poll.description}
                           </p>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex flex-col gap-1">
-                          {getStatusBadge(status)}
-                          <p className="text-xs text-neutral-500">
-                            {getTimeInfo(poll)}
-                          </p>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex flex-col gap-0.5">
-                          <p className="font-medium text-neutral-800">
-                            {poll.votes.toLocaleString()}
-                          </p>
-                          <p className="text-xs text-neutral-500">
-                            {poll.options} options
-                          </p>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8"
-                            >
-                              <MoreVertical className="w-4 h-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem
-                              onClick={() => setSelectedPollId(poll.id)}
-                            >
-                              <Eye className="w-4 h-4 mr-2" />
-                              View Results
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => handleCopyLink(poll.id)}
-                            >
-                              <Copy className="w-4 h-4 mr-2" />
-                              Copy Link
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => {
-                                setPollToShare(poll);
-                                setShareDialogOpen(true);
-                              }}
-                            >
-                              <Share2 className="w-4 h-4 mr-2" />
-                              Share
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              className="text-red-600"
-                              onClick={() => {
-                                setPollToDelete(poll);
-                                setDeleteDialogOpen(true);
-                              }}
-                            >
-                              <Trash2 className="w-4 h-4 mr-2" />
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
+                        )}
+                      </div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 cursor-pointer shrink-0"
+                          >
+                            <MoreVertical className="w-4 h-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                          align="end"
+                          className="font-grotesk"
+                        >
+                          <DropdownMenuItem
+                            onClick={() => setSelectedPollId(poll.id)}
+                            className="cursor-pointer"
+                          >
+                            <Eye className="w-4 h-4 mr-2" />
+                            View Results
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            className="cursor-pointer"
+                            onClick={() => handleCopyLink(poll.id)}
+                          >
+                            <Copy className="w-4 h-4 mr-2" />
+                            Copy Link
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setPollToShare(poll);
+                              setShareDialogOpen(true);
+                            }}
+                          >
+                            <Share2 className="w-4 h-4 mr-2" />
+                            Share
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            className="text-red-600 cursor-pointer"
+                            onClick={() => {
+                              setPollToDelete(poll);
+                              setDeleteDialogOpen(true);
+                            }}
+                          >
+                            <Trash2 className="w-4 h-4 mr-2" />
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-4 text-sm">
+                      <div className="flex items-center gap-2">
+                        {getStatusBadge(getPollStatus(poll))}
+                      </div>
+                      <div className="text-neutral-500">
+                        {poll.votes.toLocaleString()} votes
+                      </div>
+                      <div className="text-neutral-500">
+                        {poll.options} options
+                      </div>
+                    </div>
+
+                    <div className="mt-3 pt-3 border-t text-xs text-neutral-400 flex items-center justify-between">
+                      <span>{getTimeInfo(poll)}</span>
+                      <span>
+                        {formatDate(poll.start_at)} -{" "}
+                        {poll.end_at ? formatDate(poll.end_at) : "No end"}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
           )}
 
           {/* See More Button at bottom of table */}

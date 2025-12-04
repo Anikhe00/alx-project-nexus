@@ -4,6 +4,7 @@ import Footer from "@/components/Layout/Footer";
 import { Button } from "@/components/ui/button";
 import { useAuthContext } from "@/context/AuthContext";
 import { useEffect } from "react";
+import pollupImage from "@/assets/images/pollup_image.png";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -43,8 +44,12 @@ const LandingPage = () => {
         </div>
 
         {/* Poll Image */}
-        <div className="rounded-2xl md:rounded-3xl lg:rounded-4xl flex-1 max-w-[1280px] lg:flex-none md:flex-none md:h-140 lg:h-200 bg-neutral-100 w-full p-4 md:p-8 lg:p-12 border border-neutral-300">
-          <div className="rounded-lg md:rounded-xl lg:rounded-2xl w-full h-full flex flex-1 bg-teal-600"></div>
+        <div className="rounded-2xl md:rounded-3xl lg:rounded-4xl flex-1 max-w-[1280px] lg:flex-none md:flex-none h-80 md:h-140 lg:h-200 bg-neutral-100 w-full p-4 md:p-8 border border-neutral-200">
+          <img
+            className="w-full h-full object-cover border border-neutral-200 rounded-lg md:rounded-xl lg:rounded-2xl"
+            src={pollupImage}
+            alt="PollUp Dashboard"
+          />
         </div>
       </main>
       <Footer />
