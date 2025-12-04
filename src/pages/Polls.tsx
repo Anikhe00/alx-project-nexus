@@ -77,51 +77,17 @@ const getStatusBadge = (status: string) => {
   );
 };
 
-const getTimeInfo = (poll: Poll) => {
-  const now = new Date();
-  const startDate = new Date(poll.start_at);
-  const endDate = poll.end_at ? new Date(poll.end_at) : null;
-
-  if (!endDate) return "No end date";
-
-  const getPollStatus = (poll: Poll) => {
-    if (now < startDate) return "upcoming";
-    if (now > endDate) return "past";
-    return "active";
-  };
-
-  const status = getPollStatus(poll);
-
-  if (status === "upcoming") {
-    const daysUntil = Math.ceil(
-      (startDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
-    );
-    return `Starts in ${daysUntil} day${daysUntil !== 1 ? "s" : ""}`;
-  }
-
-  if (status === "past") {
-    const daysAgo = Math.ceil(
-      (now.getTime() - endDate.getTime()) / (1000 * 60 * 60 * 24)
-    );
-    return `Ended ${daysAgo} day${daysAgo !== 1 ? "s" : ""} ago`;
-  }
-
-  const daysRemaining = Math.ceil(
-    (endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
-  );
-  return `Ends in ${daysRemaining} day${daysRemaining !== 1 ? "s" : ""}`;
-};
-
-const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-};
-
 const Polls = () => {
-  const { polls, isLoading, deletePoll, getPollStatus } = usePollsContext();
+  // 1. Destructure helper functions from context
+  const {
+    polls,
+    isLoading,
+    deletePoll,
+    getPollStatus,
+    getTimeInfo,
+    formatDate,
+  } = usePollsContext();
+
   const location = useLocation();
 
   const [activeTab, setActiveTab] = useState<FilterTab>("all");
@@ -340,7 +306,7 @@ const Polls = () => {
         },
       },
     ],
-    [getPollStatus]
+    [getPollStatus, formatDate, getTimeInfo]
   );
 
   const table = useReactTable({

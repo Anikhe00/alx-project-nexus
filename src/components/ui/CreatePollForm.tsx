@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { usePollsContext } from "@/context/PollsContext";
 
 // Validation schema
 const pollSchema = z
@@ -78,6 +79,8 @@ export default function CreatePollModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
 
+  const { refreshPolls } = usePollsContext();
+
   const {
     register,
     control,
@@ -117,7 +120,6 @@ export default function CreatePollModal({
     setIsSubmitting(true);
 
     try {
-      // Get current user
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -156,6 +158,10 @@ export default function CreatePollModal({
       if (optionsError) throw optionsError;
 
       toast.success("Poll created successfully!");
+
+      // 3. THIS IS THE KEY FIX: Refresh the global list immediately
+      await refreshPolls();
+
       handleClose();
       if (onSuccess) onSuccess();
     } catch (error: any) {
@@ -186,15 +192,11 @@ export default function CreatePollModal({
 
   return (
     <>
-      {/* Backdrop */}
       <div className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 transition-opacity" />
-
-      {/* Side Panel */}
       <div
         className="fixed right-0 top-0 h-full w-full max-w-2xl bg-white shadow-2xl z-50 overflow-hidden flex flex-col animate-in slide-in-from-right duration-300"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-neutral-200">
           <div>
             <h2 className="text-2xl font-semibold font-grotesk text-neutral-800">
@@ -209,7 +211,6 @@ export default function CreatePollModal({
           </Button>
         </div>
 
-        {/* Progress Steps */}
         <div className="px-6 py-4 border-b border-neutral-200">
           <div className="flex items-center gap-2">
             {[1, 2, 3].map((step) => (
@@ -251,16 +252,15 @@ export default function CreatePollModal({
           </div>
         </div>
 
-        {/* Content */}
         <form
           onSubmit={(e) => {
             e.preventDefault();
+            // handleSubmit is called in the button onClick
           }}
           onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
           className="flex-1 flex flex-col overflow-hidden"
         >
           <div className="flex-1 overflow-y-auto p-6">
-            {/* Step 1: Poll Details */}
             {currentStep === 1 && (
               <div className="space-y-6">
                 <div>
@@ -312,7 +312,6 @@ export default function CreatePollModal({
               </div>
             )}
 
-            {/* Step 2: Poll Options */}
             {currentStep === 2 && (
               <div className="space-y-6">
                 <div>
@@ -384,7 +383,6 @@ export default function CreatePollModal({
                   </div>
                 </div>
 
-                {/* Preview */}
                 <Card className="p-4 bg-neutral-50 border-2 border-dashed">
                   <h3 className="text-sm font-semibold text-neutral-800 mb-3">
                     Preview
@@ -408,7 +406,6 @@ export default function CreatePollModal({
               </div>
             )}
 
-            {/* Step 3: Schedule */}
             {currentStep === 3 && (
               <div className="space-y-6">
                 <div>
@@ -420,7 +417,6 @@ export default function CreatePollModal({
                   </p>
 
                   <div className="grid gap-4">
-                    {/* Start Date */}
                     <div>
                       <Label className="text-sm mb-2 block">Start Date</Label>
                       <Popover>
@@ -450,7 +446,6 @@ export default function CreatePollModal({
                       </Popover>
                     </div>
 
-                    {/* End Date */}
                     <div>
                       <Label className="text-sm mb-2 block">End Date</Label>
                       <Popover>
@@ -516,7 +511,6 @@ export default function CreatePollModal({
             )}
           </div>
 
-          {/* Footer */}
           <div className="border-t border-neutral-200 p-4">
             <div className="flex justify-between gap-3">
               {currentStep > 1 ? (

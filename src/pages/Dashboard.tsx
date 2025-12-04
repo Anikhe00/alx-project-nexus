@@ -75,13 +75,13 @@ const getTimeInfo = (poll: Poll) => {
 
   if (!endDate) return "No end date";
 
-  const getPollStatus = (poll: Poll) => {
+  const getPollStatus = () => {
     if (now < startDate) return "upcoming";
     if (now > endDate) return "past";
     return "active";
   };
 
-  const status = getPollStatus(poll);
+  const status = getPollStatus();
 
   if (status === "upcoming") {
     const daysUntil = Math.ceil(

@@ -20,7 +20,7 @@ export type Poll = {
   options: number;
 };
 
-type PollStatus = "all" | "active" | "upcoming" | "past";
+export type PollStatus = "all" | "active" | "upcoming" | "past";
 
 interface PollsContextType {
   // State
@@ -39,8 +39,10 @@ interface PollsContextType {
   deletePoll: (pollId: string) => Promise<boolean>;
   getPollStatus: (poll: Poll) => PollStatus;
 
-  // Helper function
+  // Helper functions
   refreshPolls: () => void;
+  getTimeInfo: (poll: Poll) => string;
+  formatDate: (dateString: string) => string;
 }
 
 const PollsContext = createContext<PollsContextType | undefined>(undefined);
@@ -76,6 +78,50 @@ export const PollsProvider: React.FC<{ children: React.ReactNode }> = ({
     if (endDate && now > endDate) return "past";
     return "active";
   }, []);
+
+  // --- Helper Functions ---
+
+  const formatDate = useCallback((dateString: string) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  }, []);
+
+  const getTimeInfo = useCallback(
+    (poll: Poll) => {
+      const now = new Date();
+      const startDate = new Date(poll.start_at);
+      const endDate = poll.end_at ? new Date(poll.end_at) : null;
+
+      if (!endDate) return "No end date";
+
+      const status = getPollStatus(poll);
+
+      if (status === "upcoming") {
+        const daysUntil = Math.ceil(
+          (startDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
+        );
+        return `Starts in ${daysUntil} day${daysUntil !== 1 ? "s" : ""}`;
+      }
+
+      if (status === "past") {
+        const daysAgo = Math.ceil(
+          (now.getTime() - endDate.getTime()) / (1000 * 60 * 60 * 24)
+        );
+        return `Ended ${daysAgo} day${daysAgo !== 1 ? "s" : ""} ago`;
+      }
+
+      const daysRemaining = Math.ceil(
+        (endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
+      );
+      return `Ends in ${daysRemaining} day${daysRemaining !== 1 ? "s" : ""}`;
+    },
+    [getPollStatus]
+  );
+
+  // --- API Functions ---
 
   // Fetch polls from Supabase
   const fetchPolls = useCallback(async () => {
@@ -167,7 +213,7 @@ export const PollsProvider: React.FC<{ children: React.ReactNode }> = ({
 
       // Get vote counts for all user's polls
       let totalVotesCount = 0;
-      if (votesRes.data) {
+      if (votesRes.data && votesRes.data.length > 0) {
         const pollIds = votesRes.data.map((p) => p.id);
         const { count } = await supabase
           .from("poll_votes")
@@ -235,6 +281,8 @@ export const PollsProvider: React.FC<{ children: React.ReactNode }> = ({
     deletePoll,
     getPollStatus,
     refreshPolls,
+    getTimeInfo,
+    formatDate,
   };
 
   return (
