@@ -280,7 +280,7 @@ export default function Dashboard() {
             </div>
           ) : (
             <>
-              <Table className="hidden lg:block">
+              <Table className="hidden lg:table">
                 <TableHeader>
                   <TableRow className="bg-neutral-50 hover:bg-neutral-50 ">
                     <TableHead>Poll Details</TableHead>
