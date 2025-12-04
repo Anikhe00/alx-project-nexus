@@ -1,15 +1,5 @@
 # PollUp - Interactive Online Polling Platform
 
-<div align="center">
-  <img src="/public/logo.png" alt="PollUp Logo" width="200"/>
-  
-  [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
-  [![React](https://img.shields.io/badge/React-18.3-61dafb.svg)](https://reactjs.org/)
-  [![Vite](https://img.shields.io/badge/Vite-5.0-646cff.svg)](https://vitejs.dev/)
-  [![Supabase](https://img.shields.io/badge/Supabase-Latest-3ecf8e.svg)](https://supabase.com/)
-  [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38bdf8.svg)](https://tailwindcss.com/)
-</div>
-
 ## 📋 Overview
 
 PollUp is a modern, real-time online polling platform that enables users to create, share, and vote on polls with instant result updates. Built as part of the ProDev FE case study, this application demonstrates advanced front-end development skills including real-time data synchronization, state management with Context API, and dynamic data visualization.
@@ -388,29 +378,17 @@ Contributions are welcome! Please follow these steps:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-### Commit Convention
-
-Follow [Conventional Commits](https://www.conventionalcommits.org/):
-
-- `feat:` New features
-- `fix:` Bug fixes
-- `docs:` Documentation changes
-- `style:` Code style changes (formatting, etc.)
-- `refactor:` Code refactoring
-- `test:` Adding/updating tests
-- `chore:` Maintenance tasks
-
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 👨‍💻 Author
 
-**Your Name**
+**Shakirat Akanji**
 
-- GitHub: [@yourusername](https://github.com/yourusername)
-- LinkedIn: [Your Name](https://linkedin.com/in/yourprofile)
-- Twitter: [@yourhandle](https://twitter.com/yourhandle)
+- GitHub: [@anikhe00](https://github.com/anikhe00)
+- LinkedIn: [Shakirat Akanji](https://linkedin.com/in/shakirat-akanji)
+- Twitter: [@i_am_anikhe](https://twitter.com/i_am_anikhe)
 
 ## 🙏 Acknowledgments
 
@@ -421,7 +399,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-For support, email your.email@example.com or open an issue in the repository.
+For support, email akanjishakirato@gmail.com or open an issue in the repository.
 
 ---
 
