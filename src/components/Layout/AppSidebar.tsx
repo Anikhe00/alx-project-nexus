@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { CgPoll } from "react-icons/cg";
-import { IoSettingsOutline } from "react-icons/io5";
+// import { IoSettingsOutline } from "react-icons/io5";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { LogOut, Menu } from "lucide-react";
 import Logo from "../ui/Logo";
@@ -34,11 +34,11 @@ const navItems = [
     url: "/polls",
     icon: CgPoll,
   },
-  {
-    title: "Settings",
-    url: "/settings",
-    icon: IoSettingsOutline,
-  },
+  // {
+  //   title: "Settings",
+  //   url: "/settings",
+  //   icon: IoSettingsOutline,
+  // },
 ];
 
 // Desktop Sidebar Component
