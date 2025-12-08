@@ -365,31 +365,42 @@ const Polls = () => {
         </div>
 
         {/* Tabs */}
-        <div className="flex items-center gap-1 border-b border-neutral-200">
-          {(["all", "active", "upcoming", "past"] as FilterTab[]).map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={cn(
-                "px-4 py-2 text-sm font-medium capitalize transition-colors relative cursor-pointer font-grotesk",
-                activeTab === tab
-                  ? "text-teal-600 border-b-2 border-teal-600"
-                  : "text-neutral-600 hover:text-neutral-800"
-              )}
-            >
-              {tab}
-              <span
-                className={cn(
-                  "ml-2 px-2 py-0.5 text-xs rounded-full",
-                  activeTab === tab
-                    ? "bg-teal-100 text-teal-700"
-                    : "bg-neutral-100 text-neutral-600"
-                )}
-              >
-                {tabCounts[tab]}
-              </span>
-            </button>
-          ))}
+        <div
+          className="overflow-x-auto border-b border-neutral-200 scrollbar-hide"
+          style={{
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+            WebkitOverflowScrolling: "touch",
+          }}
+        >
+          <div className="flex items-center gap-1 min-w-max">
+            {(["all", "active", "upcoming", "past"] as FilterTab[]).map(
+              (tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={cn(
+                    "px-4 py-2 text-sm font-medium capitalize transition-colors relative cursor-pointer font-grotesk",
+                    activeTab === tab
+                      ? "text-teal-600 border-b-2 border-teal-600"
+                      : "text-neutral-600 hover:text-neutral-800"
+                  )}
+                >
+                  {tab}
+                  <span
+                    className={cn(
+                      "ml-2 px-2 py-0.5 text-xs rounded-full",
+                      activeTab === tab
+                        ? "bg-teal-100 text-teal-700"
+                        : "bg-neutral-100 text-neutral-600"
+                    )}
+                  >
+                    {tabCounts[tab]}
+                  </span>
+                </button>
+              )
+            )}
+          </div>
         </div>
 
         {/* Search */}

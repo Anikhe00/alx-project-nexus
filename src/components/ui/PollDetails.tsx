@@ -249,7 +249,7 @@ export default function PollDetailModal({
         <div className="flex items-start justify-between p-6 border-b border-neutral-200">
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-2">
-              <h2 className="text-2xl font-semibold font-grotesk text-neutral-800">
+              <h2 className="text-xl md:text-2xl lg:text-2xl font-semibold font-grotesk text-neutral-800">
                 {poll?.title || "Loading..."}
               </h2>
               {poll && getStatusBadge(poll.status)}
