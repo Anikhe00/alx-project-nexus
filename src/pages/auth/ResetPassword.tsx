@@ -222,10 +222,6 @@ const ResetPassword = () => {
       <main className="flex-1 w-full flex items-start justify-center px-6 py-20 lg:py-30 md:p-10">
         <div className="max-w-lg w-full flex flex-col items-center justify-center gap-7">
           <div className="w-full flex flex-col gap-1">
-            <div className="w-12 h-12 rounded-full bg-teal-100 flex items-center justify-center mb-4">
-              <Lock className="w-6 h-6 text-teal-600" />
-            </div>
-
             <h1 className="text-3xl lg:text-4xl font-grotesk font-semibold text-neutral-800">
               Set New Password
             </h1>
