@@ -16,7 +16,7 @@ import {
   FormMessage,
   FormControl,
 } from "@/components/ui/form";
-import { Lock, Eye, EyeOff, CheckCircle2, AlertCircle } from "lucide-react";
+import { Eye, EyeOff, CheckCircle2, AlertCircle } from "lucide-react";
 
 const resetPasswordSchema = z
   .object({

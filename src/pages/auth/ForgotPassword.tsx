@@ -107,9 +107,12 @@ export default function ForgotPassword() {
 
               <button
                 onClick={() => setEmailSent(false)}
-                className="text-sm text-neutral-600 hover:text-neutral-800 font-grotesk"
+                className="group text-sm gap-1 flex items-center justify-center text-neutral-600 hover:text-neutral-800 font-grotesk"
               >
-                Didn't receive the email? Try again
+                Didn't receive the email?
+                <span className="text-teal-600 font-medium group-hover:text-teal-700 cursor-pointer">
+                  Try again
+                </span>
               </button>
             </div>
           </div>
