@@ -149,15 +149,27 @@ export default function Login() {
                 {loading ? "Logging in..." : "Login"}
               </Button>
 
-              <p className="mt-4 font-grotesk text-sm text-neutral-600">
-                Don't have an account?{" "}
-                <Link
-                  to="/register"
-                  className="font-medium text-teal-600 hover:text-teal-500"
-                >
-                  Sign up
-                </Link>
-              </p>
+              <div className="flex flex-col gap-0.5">
+                <p className="mt-4 font-grotesk text-sm text-neutral-600">
+                  Don't have an account?{" "}
+                  <Link
+                    to="/register"
+                    className="font-medium text-teal-600 hover:text-teal-500"
+                  >
+                    Sign up
+                  </Link>
+                </p>
+
+                <p className="mt-4 font-grotesk text-sm text-neutral-600">
+                  Forgot Password?{" "}
+                  <Link
+                    to="/forgot-password"
+                    className="font-medium text-teal-600 hover:text-teal-500"
+                  >
+                    Reset it
+                  </Link>
+                </p>
+              </div>
             </div>
           </form>
         </Form>

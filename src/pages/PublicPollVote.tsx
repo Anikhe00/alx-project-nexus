@@ -453,7 +453,7 @@ const PublicPollVote = () => {
         <div className="mt-8 text-center text-sm text-neutral-500">
           <p>
             Powered by{" "}
-            <span className="font-semibold text-teal-600">PollApp</span>
+            <span className="font-semibold text-teal-600">PollUp</span>
           </p>
           <p className="mt-1">
             Want to create your own poll?{" "}
